@@ -9,6 +9,7 @@ public abstract class MotionSensorSuper {
     protected double xValue, yValue, zValue;
     protected double timeStamp;
 
+    // sensor descriptions
     private int accuracy;
     private double power;
     private double resolution;

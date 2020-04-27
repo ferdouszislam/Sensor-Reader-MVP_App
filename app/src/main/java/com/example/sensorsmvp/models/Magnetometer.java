@@ -6,6 +6,13 @@ public class Magnetometer {
 
     private static final double MINIMUN_DIFFERENCE = 0.01d;
 
+    // sensor descriptions
+    private int accuracy;
+    private double power;
+    private double resolution;
+    private double maxRange;
+    private int minDelay;
+
     // magnetic field strength
     private float[] magnetometerReadings = new float[3];
     // azimuth, pitch, roll
@@ -103,6 +110,46 @@ public class Magnetometer {
         return timeStamp;
     }
 
+    public int getAccuracy() {
+        return accuracy;
+    }
+
+    public void setAccuracy(int accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    public double getPower() {
+        return power;
+    }
+
+    public void setPower(double power) {
+        this.power = power;
+    }
+
+    public double getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(double resolution) {
+        this.resolution = resolution;
+    }
+
+    public double getMaxRange() {
+        return maxRange;
+    }
+
+    public void setMaxRange(double maxRange) {
+        this.maxRange = maxRange;
+    }
+
+    public int getMinDelay() {
+        return minDelay;
+    }
+
+    public void setMinDelay(int minDelay) {
+        this.minDelay = minDelay;
+    }
+
     public void setTimeStamp(long timeStamp) {
 
         if(startTime==-1){
@@ -114,6 +161,16 @@ public class Magnetometer {
 
     public static void setStartTime(long startTime) {
         Magnetometer.startTime = (double) startTime*nanoToS;
+    }
+
+    public String getFullDescription(){
+
+        return "Magnetometer: \n"+
+                "power = "+power+" mA"+
+                ", resolution "+resolution+
+                ", max range = "+maxRange+
+                ", min delay = "+minDelay+ "micro seconds";
+
     }
 
     @Override

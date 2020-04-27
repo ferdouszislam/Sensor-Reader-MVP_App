@@ -155,7 +155,7 @@ public class SensorActivityPresenter {
 
             case Sensor.TYPE_MAGNETIC_FIELD:
 
-                //TODO: set accuracy of magnetometer
+                magnetometer.setAccuracy(accuracy);
 
                 break;
 
@@ -233,7 +233,11 @@ public class SensorActivityPresenter {
                     sensorView.updateSensorUnavailableText(sensorType, "Magnetometer not available");
                     return;
                 }
-                //TODO: set description of magnetometer
+                // set descriptions of the sensor
+                magnetometer.setPower(sensor.getPower());
+                magnetometer.setResolution(sensor.getResolution());
+                magnetometer.setMaxRange(sensor.getMaximumRange());
+                magnetometer.setMinDelay(sensor.getMinDelay());
 
                 break;
 
