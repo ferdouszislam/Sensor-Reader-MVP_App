@@ -1,8 +1,6 @@
-package com.example.sensorsmvp;
+package com.example.sensorsmvp.models;
 
 import android.hardware.SensorManager;
-
-import java.util.Arrays;
 
 public class Magnetometer {
 
@@ -84,15 +82,21 @@ public class Magnetometer {
 
 
     public double getAzimuth() {
-        return orientationAngles[0];
+
+        double azimuth = Math.toDegrees(orientationAngles[0]);
+
+        if(azimuth<0)
+            azimuth +=360;
+
+        return azimuth;
     }
 
     public double getPitch() {
-        return orientationAngles[1];
+        return Math.toDegrees(orientationAngles[1]);
     }
 
     public double getRoll() {
-        return orientationAngles[2];
+        return Math.toDegrees(orientationAngles[2]);
     }
 
     public double getTimeStamp() {
@@ -115,7 +119,7 @@ public class Magnetometer {
     @Override
     public String toString() {
         return "Magnetometer:\n" +
-                "azimuth = " +Math.floor( Math.toDegrees(orientationAngles[0])*100)/100.00d+
+                "azimuth = " +Math.floor( this.getAzimuth()*100)/100.00d+
                 ", pitch = " +Math.floor( Math.toDegrees(orientationAngles[1])*100)/100.00d+
                 ", roll = " +Math.floor( Math.toDegrees(orientationAngles[2])*100)/100.00d+
                 ", timeStamp=" + Math.floor(timeStamp*100)/100.00d;

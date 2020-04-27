@@ -1,11 +1,16 @@
-package com.example.sensorsmvp;
+package com.example.sensorsmvp.presenter;
 
 import android.hardware.Sensor;
+
+import com.example.sensorsmvp.models.Accelerometer;
+import com.example.sensorsmvp.models.Gyroscope;
+import com.example.sensorsmvp.models.Magnetometer;
 
 public class SensorActivityPresenter {
 
     // models
-    private MotionSensorSuper accelerometer, gyroscope, gravity, linearAcceleration;
+    private Accelerometer accelerometer, gravity, linearAcceleration;
+    private Gyroscope gyroscope;
     private Magnetometer magnetometer;
 
     // view
@@ -46,6 +51,9 @@ public class SensorActivityPresenter {
                 // accelerometer data needed for magnetometer orientation angle calculation
                 magnetometer.setAccelerometerReadings(values);
 
+                // accelerometer data needed for horizontal angle calculation
+                gyroscope.setAccelerometerReadings(values);
+
                 break;
 
             case Sensor.TYPE_GRAVITY:
@@ -83,6 +91,9 @@ public class SensorActivityPresenter {
             case Sensor.TYPE_GYROSCOPE:
 
                 if(gyroscope.isValid(values)){
+
+                    // calculate horizontal angle before setting new values
+                    gyroscope.calculateHorizontalAngle(timeStamp);
 
                     gyroscope.setxValue(values[0]);
                     gyroscope.setyValue(values[1]);

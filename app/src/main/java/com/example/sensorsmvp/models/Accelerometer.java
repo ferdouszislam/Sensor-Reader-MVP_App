@@ -1,4 +1,4 @@
-package com.example.sensorsmvp;
+package com.example.sensorsmvp.models;
 
 import static java.lang.Math.abs;
 

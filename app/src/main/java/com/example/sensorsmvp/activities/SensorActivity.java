@@ -1,4 +1,4 @@
-package com.example.sensorsmvp;
+package com.example.sensorsmvp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,8 +8,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.text.Html;
 import android.widget.TextView;
+
+import com.example.sensorsmvp.R;
+import com.example.sensorsmvp.presenter.SensorActivityPresenter;
 
 public class SensorActivity extends AppCompatActivity implements SensorActivityPresenter.SensorView, SensorEventListener {
 

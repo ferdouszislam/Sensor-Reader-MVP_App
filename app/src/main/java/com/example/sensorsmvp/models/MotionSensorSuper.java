@@ -1,13 +1,13 @@
-package com.example.sensorsmvp;
+package com.example.sensorsmvp.models;
 
 import static java.lang.Math.floor;
 
 public abstract class MotionSensorSuper {
 
-    private String sensorName;
+    protected String sensorName;
 
-    private double xValue, yValue, zValue;
-    private double timeStamp;
+    protected double xValue, yValue, zValue;
+    protected double timeStamp;
 
     private int accuracy;
     private double power;
@@ -15,8 +15,8 @@ public abstract class MotionSensorSuper {
     private double maxRange;
     private int minDelay;
 
-    private static final double nanoToS = 1.0d/1000000000.0d;
-    private static double startTime = -1;
+    protected static final double nanoToS = 1.0d/1000000000.0d;
+    protected static double startTime = -1;
 
     public MotionSensorSuper(String sensorName) {
         this.sensorName = sensorName;
@@ -109,6 +109,10 @@ public abstract class MotionSensorSuper {
 
     public void setMinDelay(int minDelay) {
         this.minDelay = minDelay;
+    }
+
+    public static double getStartTime() {
+        return startTime;
     }
 
     public static void setStartTime(long startTime) {
