@@ -5,25 +5,36 @@ import android.hardware.Sensor;
 import com.example.sensorsmvp.models.Accelerometer;
 import com.example.sensorsmvp.models.Gyroscope;
 import com.example.sensorsmvp.models.Magnetometer;
+import com.example.sensorsmvp.unusualValueDetection_module.UnusualValueDetector;
 
-public class SensorActivityPresenter {
+public class SensorActivityPresenter implements UnusualValueDetector.unusualValueResponse {
 
     // models
     private Accelerometer accelerometer, gravity, linearAcceleration;
     private Gyroscope gyroscope;
     private Magnetometer magnetometer;
 
+    private UnusualValueDetector unusualValueDetector;
+    private int unusualValueCount = 0;
+
     // view
     private SensorView sensorView;
 
-    public SensorActivityPresenter(SensorView view){
+    public SensorActivityPresenter(SensorView view, UnusualValueDetector unusualValueDetector,
+                                   Accelerometer linearAcceleration
+    ){
 
         // initialize models
         this.accelerometer = new Accelerometer("Accelerometer");
         this.gravity = new Accelerometer("Gravity Sensor");
-        this.linearAcceleration = new Accelerometer("Linear Accelerometer");
         this.gyroscope = new Gyroscope("Gyroscope");
         this.magnetometer = new Magnetometer();
+
+        this.linearAcceleration = linearAcceleration;
+
+        // unusual value detector
+        this.unusualValueDetector = unusualValueDetector;
+        this.unusualValueDetector.setUnusualValueResponse(this);
 
         // get reference to view
         this.sensorView = view;
@@ -84,6 +95,9 @@ public class SensorActivityPresenter {
 
                     // update UI
                     sensorView.updateLinearAccelerationDataText(linearAcceleration.toString());
+
+                    // detect unusual values
+                    unusualValueDetector.analyzeMotionSensorData(values[0], values[1], values[2]);
                 }
 
                 break;
@@ -246,6 +260,12 @@ public class SensorActivityPresenter {
 
     }
 
+    @Override
+    public void unusualValueDetected(String message) {
+        unusualValueCount++;
+        sensorView.updateUnusualValueText(message+" ("+unusualValueCount+")");
+    }
+
 
     public interface SensorView{
 
@@ -256,6 +276,8 @@ public class SensorActivityPresenter {
         void updateLinearAccelerationDataText(String text);
 
         void updateSensorUnavailableText(int sensorType, String text);
+
+        void updateUnusualValueText(String text);
     }
 
 }

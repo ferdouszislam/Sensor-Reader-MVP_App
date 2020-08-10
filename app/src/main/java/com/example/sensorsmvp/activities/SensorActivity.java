@@ -11,7 +11,10 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.sensorsmvp.R;
+import com.example.sensorsmvp.models.Accelerometer;
 import com.example.sensorsmvp.presenter.SensorActivityPresenter;
+import com.example.sensorsmvp.unusualValueDetection_module.StandardDeviationMean;
+import com.example.sensorsmvp.unusualValueDetection_module.UnusualValueDetector;
 
 public class SensorActivity extends AppCompatActivity implements SensorActivityPresenter.SensorView, SensorEventListener {
 
@@ -20,6 +23,7 @@ public class SensorActivity extends AppCompatActivity implements SensorActivityP
 
     // UI
     TextView accelerometerText, gyroscopeText, gravityText, linearAccelerationText, magnetometerText;
+    TextView unusualValueText;
 
     // Sensors API configs
     private SensorManager sensorManager;
@@ -33,13 +37,19 @@ public class SensorActivity extends AppCompatActivity implements SensorActivityP
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sensorActivityPresenter = new SensorActivityPresenter(this);
+        sensorActivityPresenter = new SensorActivityPresenter(
+                this,
+                new UnusualValueDetector(new StandardDeviationMean()),
+                new Accelerometer("linear-accelerometer")
+        );
 
         accelerometerText = findViewById(R.id.accelerometerText);
         gyroscopeText = findViewById(R.id.gyroscopeText);
         gravityText = findViewById(R.id.gravityText);
         linearAccelerationText = findViewById(R.id.linearAccelerationText);
         magnetometerText = findViewById(R.id.magnetometerText);
+
+        unusualValueText = findViewById(R.id.unusualValueText);
 
         setUpSensors();
 
@@ -49,17 +59,17 @@ public class SensorActivity extends AppCompatActivity implements SensorActivityP
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        //accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        //gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        //gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         linearAccelerationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        magnetometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        //magnetometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-        sensorActivityPresenter.updateSensorAvailability(Sensor.TYPE_ACCELEROMETER, accelerometerSensor);
-        sensorActivityPresenter.updateSensorAvailability(Sensor.TYPE_GYROSCOPE, gyroscopeSensor);
-        sensorActivityPresenter.updateSensorAvailability(Sensor.TYPE_GRAVITY, gravitySensor);
+        //sensorActivityPresenter.updateSensorAvailability(Sensor.TYPE_ACCELEROMETER, accelerometerSensor);
+        //sensorActivityPresenter.updateSensorAvailability(Sensor.TYPE_GYROSCOPE, gyroscopeSensor);
+        //sensorActivityPresenter.updateSensorAvailability(Sensor.TYPE_GRAVITY, gravitySensor);
         sensorActivityPresenter.updateSensorAvailability(Sensor.TYPE_LINEAR_ACCELERATION, linearAccelerationSensor);
-        sensorActivityPresenter.updateSensorAvailability(Sensor.TYPE_MAGNETIC_FIELD, magnetometerSensor);
+        //sensorActivityPresenter.updateSensorAvailability(Sensor.TYPE_MAGNETIC_FIELD, magnetometerSensor);
 
     }
 
@@ -68,11 +78,11 @@ public class SensorActivity extends AppCompatActivity implements SensorActivityP
         super.onResume();
 
         // start up sensors
-        sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, gravitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+        //sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        //sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        //sensorManager.registerListener(this, gravitySensor, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this, linearAccelerationSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        //sensorManager.registerListener(this, magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
 
@@ -88,50 +98,43 @@ public class SensorActivity extends AppCompatActivity implements SensorActivityP
     public void onSensorChanged(SensorEvent event) {
 
         sensorActivityPresenter.updateSensorValues(event.sensor.getType(), event.values, event.timestamp);
-
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
         sensorActivityPresenter.updateSensorAccuracy(sensor.getType(), accuracy);
-
     }
 
 
     @Override
     public void updateAccelerometerDataText(String text) {
-
         accelerometerText.setText(text);
-
     }
 
     @Override
     public void updateGyroscopeDataText(String text) {
-
         gyroscopeText.setText(text);
-
     }
 
     @Override
     public void updateMagnetometerDataText(String text) {
-
         magnetometerText.setText(text);
-
     }
 
     @Override
     public void updateGravityDataText(String text) {
-
         gravityText.setText(text);
-
     }
 
     @Override
     public void updateLinearAccelerationDataText(String text) {
-
         linearAccelerationText.setText(text);
+    }
 
+    @Override
+    public void updateUnusualValueText(String text) {
+        unusualValueText.setText(text);
     }
 
     @Override
